@@ -205,11 +205,11 @@ Evidence and screenshots attached
 
 # STEP 7: Commit to Git Repository
 
-Git Repository URL: https://github.com/reshma-pk/AI-E2EQAWorkflow-Playwright.git
+Git Repository URL: https://github.com/Ramkumar-AL/AI-AGENT-E2EQAWorkflow-Playwright
 
 Prompt: Now I need to commit all the test artifacts to the Git repository using the GitHub MCP server.
 
-Git Repository URL: https://github.com/reshma-pk/AI-E2EQAWorkflow-Playwright.git
+Git Repository URL: https://github.com/Ramkumar-AL/AI-AGENT-E2EQAWorkflow-Playwright
 
 Please perform the following Git operations:
 
@@ -249,7 +249,7 @@ STEP 5 - EXECUTE AND HEAL TESTS: Run tests/saucedemo-checkout/ with --project=ch
 
 STEP 6 - CREATE TEST REPORT: Create a comprehensive test execution report at: reports/ecommerce-checkout-test-report.md Compile results from Step 3 (manual testing), Step 4 (script generation), and Step 5 (execution and healing). Include PASS/FAIL status, healing summary, defects log, and test coverage analysis.
 
-STEP 7 - COMMIT TO GIT: Use the GitHub MCP server to commit all new files (respecting .gitignore) with a descriptive message and push to https://github.com/reshma-pk/AI-E2EQAWorkflow-Playwright.git
+STEP 7 - COMMIT TO GIT: Use the GitHub MCP server to commit all new files (respecting .gitignore) with a descriptive message and push to https://github.com/Ramkumar-AL/AI-AGENT-E2EQAWorkflow-Playwright
 
 Execute this complete workflow and provide status updates after each step.
 
