@@ -16,7 +16,7 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: npx playwright install --with-deps chromium
     # Regression gate: every test except the ones tagged for known application defects.
     - name: Run Playwright tests
       run: npx playwright test --grep-invert "@known-bug"
