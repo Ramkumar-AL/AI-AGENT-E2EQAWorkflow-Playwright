@@ -49,7 +49,7 @@ flowchart TD
 
     S2 -.produces.-> PLAN[specs/<br/>saucedemo-checkout-test-plan.md]
     S3 -.produces.-> EVID[test-evidence/<br/>results + 48 screenshots]
-    S4 -.produces.-> TESTS[tests/saucedemo-checkout/<br/>7 spec files]
+    S4 -.produces.-> TESTS[tests/saucedemo-checkout/<br/>10 spec files]
     S5 -.produces.-> HEAL[test-evidence/<br/>test-healing-report.md]
     S6 -.produces.-> REPORT[reports/<br/>ecommerce-checkout-test-report.md]
 
@@ -154,13 +154,16 @@ AI-AGENT-E2EQAWorkflow-Playwright/
 ├── tests/
 │   └── saucedemo-checkout/             Step 4 output: automated tests
 │       ├── helpers.js                  Shared data, setup steps and hooks
-│       ├── cart-review.spec.js
-│       ├── checkout-information.spec.js
-│       ├── checkout-error-handling.spec.js
-│       ├── order-overview.spec.js
-│       ├── order-completion.spec.js
-│       ├── access-control.spec.js
-│       └── navigation.spec.js
+│       ├── tc-01-cart-review.spec.js
+│       ├── tc-02-valid-checkout.spec.js
+│       ├── tc-03-empty-validation.spec.js
+│       ├── tc-04-invalid-checkout-data.spec.js
+│       ├── tc-05-order-overview.spec.js
+│       ├── tc-06-cancel-controls.spec.js
+│       ├── tc-07-browser-back.spec.js
+│       ├── tc-08-order-completion.spec.js
+│       ├── tc-09-authentication-context.spec.js
+│       └── tc-10-boundary-multi-item.spec.js
 ├── reports/
 │   └── ecommerce-checkout-test-report.md  Step 6 output: test execution report
 ├── playwright.config.js                Test runner configuration
@@ -198,7 +201,7 @@ No credentials need to be configured. The suite uses Saucedemo's public demo acc
 | Run with the line reporter | `npx playwright test tests/saucedemo-checkout --project=chromium --reporter=line` |
 | Run the passing regression set only | `npx playwright test --grep-invert "@known-bug"` |
 | Run the known-defect tests only | `npx playwright test --grep "@known-bug"` |
-| Run one suite file | `npx playwright test tests/saucedemo-checkout/cart-review.spec.js` |
+| Run one suite file | `npx playwright test tests/saucedemo-checkout/tc-01-cart-review.spec.js` |
 | Run one test case | `npx playwright test -g "TC-30"` |
 | Watch the browser | `npx playwright test --headed` |
 | Debug step by step | `npx playwright test -g "TC-30" --debug` |
@@ -212,13 +215,18 @@ A full run is expected to finish with **32 passed and 8 failed**. The 8 failures
 
 | Suite file | Scope | Test cases |
 |---|---|---|
-| [cart-review.spec.js](tests/saucedemo-checkout/cart-review.spec.js) | AC1: cart contents, total, buttons, remove, reload | TC-01 to TC-09 |
-| [checkout-information.spec.js](tests/saucedemo-checkout/checkout-information.spec.js) | AC2: form elements, required-field errors, Cancel | TC-10 to TC-17 |
-| [checkout-error-handling.spec.js](tests/saucedemo-checkout/checkout-error-handling.spec.js) | AC5: invalid data, boundaries, Enter key, script input | TC-18 to TC-25 |
-| [order-overview.spec.js](tests/saucedemo-checkout/order-overview.spec.js) | AC3: order summary, totals and tax, read-only items | TC-26 to TC-29 |
-| [order-completion.spec.js](tests/saucedemo-checkout/order-completion.spec.js) | AC4 and the cart-clearing rule: confirmation, Back Home | TC-30 to TC-32 |
-| [access-control.spec.js](tests/saucedemo-checkout/access-control.spec.js) | Login rule and step guards | TC-33 to TC-37 |
-| [navigation.spec.js](tests/saucedemo-checkout/navigation.spec.js) | Browser Back and Forward behaviour | TC-38 to TC-40 |
+| [tc-01-cart-review.spec.js](tests/saucedemo-checkout/tc-01-cart-review.spec.js) | Cart contents, total, UI elements, remove, reload | TC-01, TC-02, TC-04, TC-05, TC-06, TC-07 |
+| [tc-02-valid-checkout.spec.js](tests/saucedemo-checkout/tc-02-valid-checkout.spec.js) | Information form, valid international data, end-to-end purchase | TC-10, TC-23, TC-30 |
+| [tc-03-empty-validation.spec.js](tests/saucedemo-checkout/tc-03-empty-validation.spec.js) | Required-field errors and error presentation | TC-11 to TC-16 |
+| [tc-04-invalid-checkout-data.spec.js](tests/saucedemo-checkout/tc-04-invalid-checkout-data.spec.js) | Whitespace, special characters, invalid postal codes, Enter key, script input | TC-18, TC-19, TC-20, TC-24, TC-25 |
+| [tc-05-order-overview.spec.js](tests/saucedemo-checkout/tc-05-order-overview.spec.js) | Order summary, payment, shipping, totals, read-only items | TC-26, TC-28 |
+| [tc-06-cancel-controls.spec.js](tests/saucedemo-checkout/tc-06-cancel-controls.spec.js) | Continue Shopping and both Cancel buttons | TC-03, TC-17, TC-29 |
+| [tc-07-browser-back.spec.js](tests/saucedemo-checkout/tc-07-browser-back.spec.js) | Browser Back and Forward behaviour | TC-09, TC-38, TC-39, TC-40 |
+| [tc-08-order-completion.spec.js](tests/saucedemo-checkout/tc-08-order-completion.spec.js) | Back Home and cart clearing after an order | TC-31, TC-32 |
+| [tc-09-authentication-context.spec.js](tests/saucedemo-checkout/tc-09-authentication-context.spec.js) | Login rule and checkout step guards | TC-33 to TC-37 |
+| [tc-10-boundary-multi-item.spec.js](tests/saucedemo-checkout/tc-10-boundary-multi-item.spec.js) | All six products, minimum and maximum input lengths | TC-08, TC-21, TC-22, TC-27 |
+
+The `tc-NN` prefix in a file name is the suite number. It is separate from the test case IDs (TC-01 to TC-40) used in the test titles, the test plan and the report.
 
 Each test title starts with its test case ID, and each step in the script is preceded by a comment with the matching step from the test plan, so plan, script and report can be traced to each other.
 

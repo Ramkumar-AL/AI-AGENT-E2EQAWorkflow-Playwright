@@ -153,7 +153,7 @@ These are not failures against the story but need a product decision.
 
 ### 4.1 Suite
 
-Step 4 produced 40 Playwright JavaScript tests, one per test case in the plan, in 7 suite files plus a shared helper file and a Playwright configuration.
+Step 4 produced 40 Playwright JavaScript tests, one per test case in the plan, in 10 suite files plus a shared helper file and a Playwright configuration.
 
 - **Selectors:** the `data-test` attributes confirmed during manual testing, through `getByTestId()`.
 - **Waits:** web-first assertions only; no fixed timeouts.
@@ -189,14 +189,19 @@ This was found and fixed on the first execution in Step 4. In Step 5 no test nee
 
 | Suite file | Scope | Tests | Passed | Failed | Failing tests |
 |---|---|---|---|---|---|
-| [cart-review.spec.js](../tests/saucedemo-checkout/cart-review.spec.js) | AC1 | 9 | 8 | 1 | TC-02 |
-| [checkout-information.spec.js](../tests/saucedemo-checkout/checkout-information.spec.js) | AC2 | 8 | 8 | 0 | |
-| [checkout-error-handling.spec.js](../tests/saucedemo-checkout/checkout-error-handling.spec.js) | AC5 | 8 | 4 | 4 | TC-18, TC-19, TC-20, TC-24 |
-| [order-overview.spec.js](../tests/saucedemo-checkout/order-overview.spec.js) | AC3 | 4 | 4 | 0 | |
-| [order-completion.spec.js](../tests/saucedemo-checkout/order-completion.spec.js) | AC4, BR2 | 3 | 3 | 0 | |
-| [access-control.spec.js](../tests/saucedemo-checkout/access-control.spec.js) | BR1, preconditions | 5 | 3 | 2 | TC-36, TC-37 |
-| [navigation.spec.js](../tests/saucedemo-checkout/navigation.spec.js) | Back button | 3 | 2 | 1 | TC-40 |
+| [tc-01-cart-review.spec.js](../tests/saucedemo-checkout/tc-01-cart-review.spec.js) | Cart review | 6 | 5 | 1 | TC-02 |
+| [tc-02-valid-checkout.spec.js](../tests/saucedemo-checkout/tc-02-valid-checkout.spec.js) | Valid checkout | 3 | 3 | 0 | |
+| [tc-03-empty-validation.spec.js](../tests/saucedemo-checkout/tc-03-empty-validation.spec.js) | Required-field errors | 6 | 6 | 0 | |
+| [tc-04-invalid-checkout-data.spec.js](../tests/saucedemo-checkout/tc-04-invalid-checkout-data.spec.js) | Invalid data | 5 | 1 | 4 | TC-18, TC-19, TC-20, TC-24 |
+| [tc-05-order-overview.spec.js](../tests/saucedemo-checkout/tc-05-order-overview.spec.js) | Order overview | 2 | 2 | 0 | |
+| [tc-06-cancel-controls.spec.js](../tests/saucedemo-checkout/tc-06-cancel-controls.spec.js) | Cancel and Continue Shopping | 3 | 3 | 0 | |
+| [tc-07-browser-back.spec.js](../tests/saucedemo-checkout/tc-07-browser-back.spec.js) | Back button | 4 | 3 | 1 | TC-40 |
+| [tc-08-order-completion.spec.js](../tests/saucedemo-checkout/tc-08-order-completion.spec.js) | Order completion | 2 | 2 | 0 | |
+| [tc-09-authentication-context.spec.js](../tests/saucedemo-checkout/tc-09-authentication-context.spec.js) | Login rule, step guards | 5 | 3 | 2 | TC-36, TC-37 |
+| [tc-10-boundary-multi-item.spec.js](../tests/saucedemo-checkout/tc-10-boundary-multi-item.spec.js) | Boundaries, six products | 4 | 4 | 0 | |
 | **Total** | | **40** | **32** | **8** | |
+
+The suite was reorganised from 7 files into these 10 after Step 5. The 40 tests and their assertions are unchanged, and a re-run gave the same 32 passed and 8 failed. The `tc-NN` file prefix is the suite number, not a test case ID.
 
 ### 4.5 Automated failure details
 

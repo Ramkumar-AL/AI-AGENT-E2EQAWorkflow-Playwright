@@ -1,21 +1,35 @@
-// spec: specs/saucedemo-checkout-test-plan.md (section 10)
+// spec: specs/saucedemo-checkout-test-plan.md (sections 4 and 10)
 const { test, expect } = require('@playwright/test');
 const {
-  URLS, pageTitle, cartBadge, cartItems,
-  setupInfo, continueToOverview, finishOrder, attachFailureContext, knownBug,
+  PRODUCTS, URLS, pageTitle, cartBadge, cartItems,
+  setupCart, startCheckout, continueToOverview, finishOrder, attachFailureContext, knownBug,
 } = require('./helpers');
 
-test.describe('Navigation and Browser Back Button', () => {
-  // SETUP-INFO: every test starts on the information page, reached through the UI
-  // so that the browser history matches a real user's (products > cart > information).
+test.describe('Browser Back Button Navigation', () => {
+  // SETUP-CART: every test starts on the cart page, reached through the UI
+  // so that the browser history matches a real user's (products > cart).
   test.beforeEach(async ({ page }) => {
-    await setupInfo(page);
+    await setupCart(page);
   });
 
   test.afterEach(attachFailureContext);
 
+  test('TC-09: Item name link opens product details and Back returns to the cart', async ({ page }) => {
+    // 1. Perform SETUP-CART (beforeEach).
+    // 2. Click the name "Sauce Labs Backpack".
+    await page.getByTestId('item-4-title-link').click();
+    await expect(page).toHaveURL('/inventory-item.html?id=4');
+    await expect(page.locator('.inventory_details_name')).toHaveText(PRODUCTS.backpack.name);
+
+    // 3. Click the browser Back button.
+    await page.goBack();
+    await expect(page).toHaveURL(URLS.cart);
+    await expect(cartItems(page)).toHaveCount(2);
+  });
+
   test('TC-38: Browser Back from the information page returns to the cart', async ({ page }) => {
-    // 1. Perform SETUP-INFO (beforeEach).
+    // 1. Perform SETUP-INFO.
+    await startCheckout(page);
     await expect(page).toHaveURL(URLS.info);
 
     // 2. Click the browser Back button.
@@ -35,6 +49,7 @@ test.describe('Navigation and Browser Back Button', () => {
 
   test('TC-39: Browser Back and Forward between overview and information pages', async ({ page }) => {
     // 1. Perform SETUP-OVERVIEW.
+    await startCheckout(page);
     await continueToOverview(page);
 
     // 2. Click the browser Back button.
@@ -66,6 +81,7 @@ test.describe('Navigation and Browser Back Button', () => {
     knownBug('BUG-06: Browser Back after confirmation allows a second, empty order'),
     async ({ page }) => {
       // 1. Perform SETUP-OVERVIEW and click Finish.
+      await startCheckout(page);
       await continueToOverview(page);
       await finishOrder(page);
       await expect(cartBadge(page)).toHaveCount(0);

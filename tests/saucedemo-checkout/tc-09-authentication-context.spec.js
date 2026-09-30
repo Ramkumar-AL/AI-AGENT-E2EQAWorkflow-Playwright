@@ -1,13 +1,11 @@
 // spec: specs/saucedemo-checkout-test-plan.md (section 9)
 const { test, expect } = require('@playwright/test');
 const {
-  PRODUCTS, URLS, cartBadge, cartItems, cartItem,
-  login, addToCart, openCart, logout, attachFailureContext, knownBug,
+  PRODUCTS, URLS, cartBadge, cartItems, cartItem, accessError,
+  login, addToCart, openCart, addTwoItemsAndOpenCart, logout, attachFailureContext, knownBug,
 } = require('./helpers');
 
-const accessError = (path) => `Epic sadface: You can only access '${path}' when you are logged in.`;
-
-test.describe('Access Control and Business Rules (BR1, BR2)', () => {
+test.describe('Authentication and Checkout Context (BR1, BR2)', () => {
   test.afterEach(attachFailureContext);
 
   test.describe('Logged-out user', () => {
@@ -84,9 +82,7 @@ test.describe('Access Control and Business Rules (BR1, BR2)', () => {
       knownBug('BUG-05: The overview page can be opened without entering checkout information'),
       async ({ page }) => {
         // 1. Perform SETUP-CART.
-        await addToCart(page, PRODUCTS.backpack, PRODUCTS.bikeLight);
-        await openCart(page);
-        await expect(cartItems(page)).toHaveCount(2);
+        await addTwoItemsAndOpenCart(page);
 
         // 2. Open the overview URL directly.
         await page.goto(URLS.overview);

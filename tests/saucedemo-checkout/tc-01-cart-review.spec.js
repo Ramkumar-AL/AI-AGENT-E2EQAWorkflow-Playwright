@@ -1,8 +1,8 @@
 // spec: specs/saucedemo-checkout-test-plan.md (section 4)
 const { test, expect } = require('@playwright/test');
 const {
-  PRODUCTS, ALL_PRODUCTS, URLS, pageTitle, cartBadge, cartItems, cartItem,
-  login, addToCart, openCart, startCheckout, attachFailureContext, knownBug,
+  PRODUCTS, URLS, pageTitle, cartBadge, cartItems, cartItem,
+  login, addToCart, addTwoItemsAndOpenCart, attachFailureContext, knownBug,
 } = require('./helpers');
 
 test.describe('Cart Review (AC1)', () => {
@@ -11,13 +11,6 @@ test.describe('Cart Review (AC1)', () => {
   });
 
   test.afterEach(attachFailureContext);
-
-  // SETUP-CART on top of the login done in beforeEach.
-  async function addTwoItemsAndOpenCart(page) {
-    await addToCart(page, PRODUCTS.backpack, PRODUCTS.bikeLight);
-    await openCart(page);
-    await expect(cartItems(page)).toHaveCount(2);
-  }
 
   test('TC-01: Cart displays all added items with their details', async ({ page }) => {
     // 1. Perform SETUP-LOGIN (beforeEach).
@@ -66,23 +59,6 @@ test.describe('Cart Review (AC1)', () => {
       await expect(cart).toContainText(/total/i);
       await expect(cart).toContainText('$39.98');
     });
-
-  test('TC-03: Continue Shopping returns to the products page and keeps the cart', async ({ page }) => {
-    // 1. Perform SETUP-CART.
-    await addTwoItemsAndOpenCart(page);
-
-    // 2. Click Continue Shopping.
-    await page.getByTestId('continue-shopping').click();
-    await expect(page).toHaveURL(URLS.inventory);
-    await expect(page.locator('.inventory_item')).toHaveCount(ALL_PRODUCTS.length);
-
-    // 3. Check the cart badge.
-    await expect(cartBadge(page)).toHaveText('2');
-
-    // 4. Check the Backpack and Bike Light buttons.
-    await expect(page.getByTestId(`remove-${PRODUCTS.backpack.slug}`)).toBeVisible();
-    await expect(page.getByTestId(`remove-${PRODUCTS.bikeLight.slug}`)).toBeVisible();
-  });
 
   test('TC-04: Checkout button opens the checkout information page', async ({ page }) => {
     // 1. Perform SETUP-CART.
@@ -149,36 +125,5 @@ test.describe('Cart Review (AC1)', () => {
     await expect(cartItem(page, PRODUCTS.backpack).locator('.inventory_item_price')).toHaveText(PRODUCTS.backpack.price);
     await expect(cartItem(page, PRODUCTS.bikeLight).locator('.inventory_item_price')).toHaveText(PRODUCTS.bikeLight.price);
     await expect(cartBadge(page)).toHaveText('2');
-  });
-
-  test('TC-08: Cart with all six products', async ({ page }) => {
-    // 1. Perform SETUP-LOGIN (beforeEach).
-    // 2. Click Add to cart on all six products.
-    await addToCart(page, ...ALL_PRODUCTS);
-    await expect(cartBadge(page)).toHaveText('6');
-
-    // 3. Click the cart icon.
-    await openCart(page);
-    await expect(cartItems(page)).toHaveCount(6);
-    await expect(page.locator('.cart_item .cart_quantity')).toHaveText(['1', '1', '1', '1', '1', '1']);
-
-    // 4. Compare each row's name and price with the product data table.
-    await expect(page.locator('.cart_item .inventory_item_name')).toHaveText(ALL_PRODUCTS.map((p) => p.name));
-    await expect(page.locator('.cart_item .inventory_item_price')).toHaveText(ALL_PRODUCTS.map((p) => p.price));
-  });
-
-  test('TC-09: Item name link opens product details and Back returns to the cart', async ({ page }) => {
-    // 1. Perform SETUP-CART.
-    await addTwoItemsAndOpenCart(page);
-
-    // 2. Click the name "Sauce Labs Backpack".
-    await page.getByTestId('item-4-title-link').click();
-    await expect(page).toHaveURL('/inventory-item.html?id=4');
-    await expect(page.locator('.inventory_details_name')).toHaveText(PRODUCTS.backpack.name);
-
-    // 3. Click the browser Back button.
-    await page.goBack();
-    await expect(page).toHaveURL(URLS.cart);
-    await expect(cartItems(page)).toHaveCount(2);
   });
 });

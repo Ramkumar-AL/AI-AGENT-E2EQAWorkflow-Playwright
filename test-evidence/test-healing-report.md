@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **User story** | SCRUM-101, Saucedemo-ecommerce Checkout Process |
-| **Suite** | `tests/saucedemo-checkout/` (7 spec files, 40 tests) |
+| **Suite** | `tests/saucedemo-checkout/` (10 spec files, 40 tests) |
 | **Command** | `npx playwright test tests/saucedemo-checkout --project=chromium --reporter=line` |
 | **Browser** | Chrome (`chromium` project), viewport 1280x720 |
 | **Executed on** | 2026-09-30 |
@@ -73,13 +73,16 @@ None. No test was marked `test.fixme()`.
 
 | Suite file | Tests | Passed | Failed (defect) |
 |---|---|---|---|
-| `cart-review.spec.js` | 9 | 8 | 1 (TC-02) |
-| `checkout-information.spec.js` | 8 | 8 | 0 |
-| `checkout-error-handling.spec.js` | 8 | 4 | 4 (TC-18, TC-19, TC-20, TC-24) |
-| `order-overview.spec.js` | 4 | 4 | 0 |
-| `order-completion.spec.js` | 3 | 3 | 0 |
-| `access-control.spec.js` | 5 | 3 | 2 (TC-36, TC-37) |
-| `navigation.spec.js` | 3 | 2 | 1 (TC-40) |
+| `tc-01-cart-review.spec.js` | 6 | 5 | 1 (TC-02) |
+| `tc-02-valid-checkout.spec.js` | 3 | 3 | 0 |
+| `tc-03-empty-validation.spec.js` | 6 | 6 | 0 |
+| `tc-04-invalid-checkout-data.spec.js` | 5 | 1 | 4 (TC-18, TC-19, TC-20, TC-24) |
+| `tc-05-order-overview.spec.js` | 2 | 2 | 0 |
+| `tc-06-cancel-controls.spec.js` | 3 | 3 | 0 |
+| `tc-07-browser-back.spec.js` | 4 | 3 | 1 (TC-40) |
+| `tc-08-order-completion.spec.js` | 2 | 2 | 0 |
+| `tc-09-authentication-context.spec.js` | 5 | 3 | 2 (TC-36, TC-37) |
+| `tc-10-boundary-multi-item.spec.js` | 4 | 4 | 0 |
 | **Total** | **40** | **32** | **8** |
 
 ## 7. Useful commands

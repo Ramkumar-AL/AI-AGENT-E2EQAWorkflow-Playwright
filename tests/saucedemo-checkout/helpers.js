@@ -1,6 +1,6 @@
 // Shared test data and setup steps for the Saucedemo checkout suites.
 // spec: specs/saucedemo-checkout-test-plan.md
-const { expect } = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
 
 const USER = { username: 'standard_user', password: 'secret_sauce' };
 
@@ -31,6 +31,8 @@ const cartBadge = (page) => page.locator('.shopping_cart_badge');
 const cartItems = (page) => page.locator('.cart_item');
 const cartItem = (page, product) => cartItems(page).filter({ hasText: product.name });
 
+const accessError = (path) => `Epic sadface: You can only access '${path}' when you are logged in.`;
+
 // SETUP-LOGIN
 async function login(page) {
   await page.goto(URLS.login);
@@ -55,13 +57,18 @@ async function openCart(page) {
   await expect(pageTitle(page)).toHaveText('Your Cart');
 }
 
-// SETUP-CART: logged in, Backpack and Bike Light in the cart, cart page open.
-async function setupCart(page) {
-  await login(page);
+// The part of SETUP-CART that follows login: Backpack and Bike Light in the cart, cart page open.
+async function addTwoItemsAndOpenCart(page) {
   await addToCart(page, PRODUCTS.backpack, PRODUCTS.bikeLight);
   await expect(cartBadge(page)).toHaveText('2');
   await openCart(page);
   await expect(cartItems(page)).toHaveCount(2);
+}
+
+// SETUP-CART: logged in, Backpack and Bike Light in the cart, cart page open.
+async function setupCart(page) {
+  await login(page);
+  await addTwoItemsAndOpenCart(page);
 }
 
 async function startCheckout(page) {
@@ -116,6 +123,30 @@ async function logout(page) {
   await expect(page.getByTestId('login-button')).toBeVisible();
 }
 
+// Continue ends in one of two states: an error on the information page, or the overview page.
+// Waiting for either one avoids fixed timeouts and lets the row assertions run without retrying.
+async function submitAndWaitForOutcome(page) {
+  await page.getByTestId('continue').click();
+  await expect(page.getByTestId('error').or(page.getByTestId('finish'))).toBeVisible();
+}
+
+// Runs every data row and reports all rows that were wrongly accepted (soft assertions).
+// Expects the information page to be open for the first row.
+async function expectRowsRejected(page, rows) {
+  for (const [index, row] of rows.entries()) {
+    await test.step(`Row ${index + 1}: ${JSON.stringify(row)}`, async () => {
+      // 1. Perform SETUP-INFO (beforeEach for the first row, a fresh form for later rows).
+      if (index > 0) await restartCheckout(page);
+
+      // 2. Enter the values from the data row and click Continue.
+      await fillInformation(page, row);
+      await submitAndWaitForOutcome(page);
+      expect.soft(await page.getByTestId('error').isVisible(), `row ${index + 1}: a validation error is displayed`).toBe(true);
+      expect.soft(page.url(), `row ${index + 1}: user stays on the information page`).toContain(URLS.info);
+    });
+  }
+}
+
 // afterEach hook: record where a failing test ended up, next to the screenshot and trace.
 async function attachFailureContext({ page }, testInfo) {
   if (testInfo.status !== testInfo.expectedStatus) {
@@ -128,8 +159,8 @@ const knownBug = (description) => ({ tag: '@known-bug', annotation: { type: 'iss
 
 module.exports = {
   USER, VALID_INFO, PRODUCTS, ALL_PRODUCTS, URLS,
-  pageTitle, cartBadge, cartItems, cartItem,
-  login, addToCart, openCart, setupCart, startCheckout, setupInfo, fillInformation,
+  pageTitle, cartBadge, cartItems, cartItem, accessError,
+  login, addToCart, openCart, addTwoItemsAndOpenCart, setupCart, startCheckout, setupInfo, fillInformation,
   continueToOverview, setupOverview, restartCheckout, finishOrder, logout,
-  attachFailureContext, knownBug,
+  submitAndWaitForOutcome, expectRowsRejected, attachFailureContext, knownBug,
 };
