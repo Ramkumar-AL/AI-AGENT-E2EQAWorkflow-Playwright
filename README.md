@@ -152,6 +152,7 @@ AI-AGENT-E2EQAWorkflow-Playwright/
 │   ├── test-healing-report.md          Step 5 output: run and healing results
 │   └── screenshots/                    Step 3 output: 48 screenshots
 ├── tests/
+│   ├── seed.spec.ts                    Seed test: logs in so agent sessions start on the Products page
 │   └── saucedemo-checkout/             Step 4 output: automated tests
 │       ├── helpers.js                  Shared data, setup steps and hooks
 │       ├── tc-01-cart-review.spec.js
@@ -167,7 +168,6 @@ AI-AGENT-E2EQAWorkflow-Playwright/
 ├── reports/
 │   └── ecommerce-checkout-test-report.md  Step 6 output: test execution report
 ├── playwright.config.js                Test runner configuration
-├── seed.spec.ts                        Seed file used by the Playwright agents
 ├── QA_E2E_Prompt.md                    The prompts for all seven steps
 ├── package.json
 └── README.md
@@ -207,7 +207,13 @@ No credentials need to be configured. The suite uses Saucedemo's public demo acc
 | Debug step by step | `npx playwright test -g "TC-30" --debug` |
 | Open the HTML report | `npx playwright show-report` |
 
-A full run is expected to finish with **32 passed and 8 failed**. The 8 failures are the known application defects described below, not broken scripts.
+A run of `tests/saucedemo-checkout` is expected to finish with **32 passed and 8 failed**. The 8 failures are the known application defects described below, not broken scripts.
+
+Commands without a path, such as `npx playwright test`, also run the seed test in [tests/seed.spec.ts](tests/seed.spec.ts), so they report 41 tests: 33 passed and 8 failed.
+
+### The seed test
+
+[tests/seed.spec.ts](tests/seed.spec.ts) is the starting point the Playwright planner and generator agents use when they set up a browser page. It opens Saucedemo, logs in as `standard_user` and checks that the Products page is shown, so every agent session begins already logged in. It is not one of the 40 checkout test cases.
 
 ## Test suite design
 
@@ -275,7 +281,7 @@ Steps to reproduce, screenshots and the coverage analysis are in the [test execu
 The workflow can be repeated for this story or adapted to another one.
 
 1. **Open the project** in an editor with an AI coding agent that supports MCP servers, such as VS Code with GitHub Copilot or Claude Code.
-2. **Start the Playwright Test MCP server.** It is already declared in [.vscode/mcp.json](.vscode/mcp.json) and runs `npx playwright run-test-mcp-server`.
+2. **Start the Playwright Test MCP server.** It is already declared in [.vscode/mcp.json](.vscode/mcp.json) and runs `npx playwright run-test-mcp-server`. The agents use [tests/seed.spec.ts](tests/seed.spec.ts) to start each browser session logged in.
 3. **Connect a GitHub MCP server** if the agent should commit and push by itself. The `git` CLI works as a fallback.
 4. **Run the prompts** from [QA_E2E_Prompt.md](QA_E2E_Prompt.md), one step at a time or as the single combined prompt at the end of that file.
 
