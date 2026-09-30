@@ -1,0 +1,16 @@
+{
+  "name": "ai-agent-e2eqaworkflow-playwright",
+  "version": "1.0.0",
+  "description": "This is a directory for test plans.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}
