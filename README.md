@@ -289,13 +289,14 @@ To test a different feature, add a user story under [user_stories/](user_stories
 
 ## Continuous integration
 
-[.github/workflows/playwright.yml](.github/workflows/playwright.yml) runs `npx playwright test` on every push and pull request to `main`, and uploads the HTML report as a build artifact.
+[.github/workflows/playwright.yml](.github/workflows/playwright.yml) runs on every push and pull request to `main`, in two steps:
 
-Because the 8 known-defect tests fail by design, the workflow reports a failed run. To make CI a regression gate, change its test command to:
+| Step | Command | Effect on the build |
+|---|---|---|
+| Regression gate | `npx playwright test --grep-invert "@known-bug"` | A failure here fails the build. |
+| Known-defect tests | `npx playwright test --grep "@known-bug" --reporter=line` | Expected to fail. The step is marked `continue-on-error`, so it does not fail the build. |
 
-```bash
-npx playwright test --grep-invert "@known-bug"
-```
+The 8 known-defect tests fail by design until the application is fixed, which is why they run separately. Their output stays in the job log, so the defects remain visible. The HTML report of the regression gate is uploaded as a build artifact.
 
 ## Known limitations
 

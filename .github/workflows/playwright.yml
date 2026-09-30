@@ -17,8 +17,15 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+    # Regression gate: every test except the ones tagged for known application defects.
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npx playwright test --grep-invert "@known-bug"
+    # Known-defect tests fail until the application is fixed, so they must not fail the build.
+    # The line reporter keeps this step from overwriting the HTML report of the step above.
+    - name: Run known-defect tests (expected to fail)
+      if: ${{ !cancelled() }}
+      continue-on-error: true
+      run: npx playwright test --grep "@known-bug" --reporter=line
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
