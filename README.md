@@ -1,4 +1,4 @@
-# AI-Agent End-to-End QA Workflow with Playwright
+# AI Agent E2E E-commerce Playwright
 
 An end-to-end QA workflow driven by natural-language prompts. Starting from a single user story, an AI agent produces a test plan, executes exploratory tests, generates Playwright automation, heals failing scripts, writes a test report and commits everything to Git.
 
@@ -132,7 +132,7 @@ flowchart LR
 ### Folder structure
 
 ```
-AI-AGENT-E2EQAWorkflow-Playwright/
+ai-agent-e2e-ecommerce-playwright/
 ├── .github/
 │   ├── agents/                         AI agent definitions
 │   │   ├── playwright-test-planner.agent.md
@@ -184,8 +184,8 @@ AI-AGENT-E2EQAWorkflow-Playwright/
 ### Installation
 
 ```bash
-git clone https://github.com/Ramkumar-AL/AI-AGENT-E2EQAWorkflow-Playwright.git
-cd AI-AGENT-E2EQAWorkflow-Playwright
+git clone https://github.com/Ramkumar-AL/ai-agent-e2e-ecommerce-playwright.git
+cd ai-agent-e2e-ecommerce-playwright
 npm install
 ```
 

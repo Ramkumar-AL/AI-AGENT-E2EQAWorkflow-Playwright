@@ -1,5 +1,5 @@
 {
-  "name": "ai-agent-e2eqaworkflow-playwright",
+  "name": "ai-agent-e2e-ecommerce-playwright",
   "version": "1.0.0",
   "description": "This is a directory for test plans.",
   "main": "index.js",
